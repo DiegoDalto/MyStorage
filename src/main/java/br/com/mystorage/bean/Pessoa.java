@@ -6,6 +6,7 @@
 package br.com.mystorage.bean;
 
 import br.com.mystorage.enumeration.Permissao;
+import java.util.List;
 
 /**
  *
@@ -20,6 +21,43 @@ public class Pessoa {
     private String senha;
     private String rg;
     private Permissao permissao;
+    private Endereco endereco;
+
+    private List<Telefone> listTelefone;
+    private List<Aluguel> listAluguel;
+    private List<Reserva> listReserva;
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public List<Telefone> getListTelefone() {
+        return listTelefone;
+    }
+
+    public void setListTelefone(List<Telefone> listTelefone) {
+        this.listTelefone = listTelefone;
+    }
+
+    public List<Aluguel> getListAluguel() {
+        return listAluguel;
+    }
+
+    public void setListAluguel(List<Aluguel> listAluguel) {
+        this.listAluguel = listAluguel;
+    }
+
+    public List<Reserva> getListReserva() {
+        return listReserva;
+    }
+
+    public void setListReserva(List<Reserva> listReserva) {
+        this.listReserva = listReserva;
+    }
 
     public Long getId() {
         return id;
@@ -106,6 +144,5 @@ public class Pessoa {
     public String toString() {
         return "Pessoa{" + "id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", login=" + login + ", senha=" + senha + ", rg=" + rg + ", permissao=" + permissao + '}';
     }
-    
-    
+
 }
