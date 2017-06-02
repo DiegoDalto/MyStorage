@@ -5,10 +5,20 @@
  */
 package br.com.mystorage.bean;
 
+import br.com.mystorage.enumeration.TipoItem;
+import java.time.LocalDate;
+
 /**
  *
  * @author Diego
  */
 public class Item {
+    private Long id;
+    private String sinopse;
+    private Integer quantidade;
+    private String nome;
+    private TipoItem tipo;
+    private LocalDate dataLancamento;
+    
     
 }

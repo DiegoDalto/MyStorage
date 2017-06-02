@@ -5,14 +5,13 @@
  */
 package br.com.mystorage.bean;
 
-import br.com.mystorage.enumeration.TipoTelefone;
+import br.com.mystorage.enumeration.EnumFilme;
 
 /**
  *
  * @author Diego
  */
-public class Telefone {
-    private Long id;
-    private String numero;
-    private TipoTelefone tipo;
+public class Filme extends Item{
+    private EnumFilme genero;
+    
 }
