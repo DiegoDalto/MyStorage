@@ -8,7 +8,6 @@ package br.com.mystorage.dao;
 import br.com.mystorage.bean.Pessoa;
 import br.com.mystorage.db.ConexaoJDBC;
 import br.com.mystorage.db.ConexaoPostgresJDBC;
-import br.com.mystorage.enumeration.Permissao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,9 +36,10 @@ public class PessoaDAO {
             stmt.setString(2, pessoa.getLogin());
             stmt.setString(3, pessoa.getSenha());
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                id = rs.getLong("id");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    id = rs.getLong("id");
+                }
             }
             this.conexao.commit();
         } catch (SQLException ex) {
@@ -50,7 +50,7 @@ public class PessoaDAO {
     }
 
     public int alterarPessoa(Pessoa pessoa) throws SQLException, ClassNotFoundException {
-        String sqlQuery = "UPDATE pessoa SET nome = ?, login = ?, senha = ?, permissao = ? WHERE id = ?";
+        String sqlQuery = "UPDATE pessoa SET nome = ?, login = ?, senha = ? WHERE id = ?";
         int linhasAfetadas = 0;
 
         try {
@@ -58,8 +58,8 @@ public class PessoaDAO {
             stmt.setString(1, pessoa.getNome());
             stmt.setString(2, pessoa.getLogin());
             stmt.setString(3, pessoa.getSenha());
-            stmt.setString(4, pessoa.getPermissao().toString());
-            stmt.setLong(5, pessoa.getId());
+            // stmt.setString(4, pessoa.getPermissao().toString());
+            stmt.setLong(4, pessoa.getID());
 
             linhasAfetadas = stmt.executeUpdate();
             this.conexao.commit();
@@ -126,11 +126,11 @@ public class PessoaDAO {
     private Pessoa parser(ResultSet resultset) throws SQLException {
         Pessoa p = new Pessoa();
 
-        p.setId(resultset.getLong("id"));
+        p.setID(resultset.getLong("id"));
         p.setNome(resultset.getString("nome"));
         p.setLogin(resultset.getString("login"));
         p.setSenha(resultset.getString("senha"));
-        p.setPermissao(Permissao.valueOf(resultset.getString("permissao")));
+        //  p.setPermissao(Permissao.valueOf(resultset.getString("permissao")));
 
         return p;
     }

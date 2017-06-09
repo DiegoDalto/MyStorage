@@ -10,5 +10,19 @@ package br.com.mystorage.enumeration;
  * @author Diego
  */
 public enum Permissao {
-    ADMIN, CLIENTE, FUNCIONARIO
+    ADMIN("Admin"),
+    CLIENTE("Cliente"),
+    FUNCIONARIO("Funcionario");
+
+    private String nome;
+
+    Permissao(String nome) {
+        this.nome = nome;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
+    }
+
 }

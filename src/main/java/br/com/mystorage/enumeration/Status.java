@@ -10,6 +10,18 @@ package br.com.mystorage.enumeration;
  * @author Diego
  */
 public enum Status {
-    CANCELADO, ATIVO, CONCLUIDA
+    CANCELADO("Cancelado"),
+    ATIVO("Ativo"),
+    CONCLUIDA("Concluido");
     
+    private String nome;
+    
+    Status(String nome){
+        this.nome = nome;
+    }
+    
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

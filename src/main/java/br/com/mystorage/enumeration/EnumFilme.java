@@ -10,5 +10,30 @@ package br.com.mystorage.enumeration;
  * @author Diego
  */
 public enum EnumFilme {
-    ACAO, ANIMACAO, AVENTURA, COMEDIA, FANTASIA, FAROESTE, FICCAO_CIENTIFICA, GUERRA, MUSICAL, PORNOGRAFICOS, ROMANCE, SUSPENSE, TERROR, TRAGEDIA, DRAMA
+    ACAO("Ação"),
+    ANIMACAO("Animação"),
+    AVENTURA("Aventura"),
+    COMEDIA("Comedia"), 
+    FANTASIA("Fantasia"),
+    FAROESTE("Faroeste"),
+    FICCAO_CIENTIFICA("Ficção Cientifica"),
+    GUERRA("Guerra"),
+    MUSICAL("Musical"),
+    PORNOGRAFICOS("Porno"),
+    ROMANCE("Romance"),
+    SUSPENSE("Suspense"),
+    TERROR("Terror"),
+    TRAGEDIA("Tragedia"),
+    DRAMA("Drama");
+
+    private String nome;
+
+    EnumFilme(String nome) {
+        this.nome = nome;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

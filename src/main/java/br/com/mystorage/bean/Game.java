@@ -5,25 +5,25 @@
  */
 package br.com.mystorage.bean;
 
-import br.com.mystorage.enumeration.EnumFilme;
+import br.com.mystorage.enumeration.EnumGame;
 
 /**
  *
  * @author Diego
  */
-public class Filme extends Item{
-    private EnumFilme genero;
+public class Game extends Item{
+      private EnumGame genero;
 
-    public EnumFilme getGenero() {
+    public EnumGame getGenero() {
         return genero;
     }
 
-    public void setGenero(EnumFilme genero) {
+    public void setGenero(EnumGame genero) {
         this.genero = genero;
     }
 
     @Override
     public String toString() {
-        return "Filme{" + "genero=" + genero + '}';
+        return "Game{" + "genero=" + genero + '}';
     }
 }
