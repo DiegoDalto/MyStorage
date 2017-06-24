@@ -15,7 +15,6 @@ import java.util.Objects;
  */
 public class Aluguel extends Bean<Long> {
 
-    private Long id;
     private Double valor;
     private Double multa;
     private Date dataEntrega;
@@ -23,13 +22,6 @@ public class Aluguel extends Bean<Long> {
     private Date dataAluguel;
     private List<Item> listItemsAlugados;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Double getValor() {
         return valor;
@@ -80,32 +72,7 @@ public class Aluguel extends Bean<Long> {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Aluguel other = (Aluguel) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "Aluguel{" + "id=" + id + ", valor=" + valor + ", multa=" + multa + ", dataEntrega=" + dataEntrega + ", dataEntregaEfetivada=" + dataEntregaEfetivada + ", dataAluguel=" + dataAluguel + ", listItemsAlugados=" + listItemsAlugados + '}';
+        return "Aluguel{" + ", valor=" + valor + ", multa=" + multa + ", dataEntrega=" + dataEntrega + ", dataEntregaEfetivada=" + dataEntregaEfetivada + ", dataAluguel=" + dataAluguel + ", listItemsAlugados=" + listItemsAlugados + '}';
     }
 }

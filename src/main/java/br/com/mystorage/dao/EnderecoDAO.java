@@ -5,8 +5,9 @@
  */
 package br.com.mystorage.dao;
 
+import br.com.mystorage.dao.utils.DAOFactory;
+import br.com.mystorage.dao.utils.ReadWriteDAO;
 import br.com.mystorage.bean.Endereco;
-import br.com.mystorage.db.ConexaoJDBC;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,8 +29,8 @@ public class EnderecoDAO extends ReadWriteDAO<Endereco, Long> {
 
     @Override
     protected void insert(Connection conn, Endereco bean, Serializable... dependencies) throws SQLException {
-        String sql = "INSERT INTO endereco (logradouro, cidade, cep, numero, complemento, bairro) VALUES (?, ?, ?) RETURNING id";
-        EnderecoDAO enderecoDAO = DAOFactory.getInstance().getEnderecoDAO();
+        String sql = "INSERT INTO endereco (logradouro, cidade, cep, numero, complemento, bairro) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+       //EnderecoDAO enderecoDAO = DAOFactory.getInstance().getEnderecoDAO();
         try (PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, bean.getLogradouro());
             ps.setString(2, bean.getCidade());
@@ -40,12 +41,16 @@ public class EnderecoDAO extends ReadWriteDAO<Endereco, Long> {
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.first()) {
+                      bean.setID(rs.getLong("id"));
                     bean.setID(rs.getLong("id"));
-                    enderecoDAO.insert(conn, bean.getLogradouro(), bean.getID());
+         //           enderecoDAO.insert(conn, bean.getLogradouro(), bean.getID());
                 }
             }
             conn.commit();
         } catch (SQLException ex) {
+            conn.rollback();
+            throw ex;
+        } catch (Exception ex) {
             conn.rollback();
             throw ex;
         }
@@ -54,7 +59,7 @@ public class EnderecoDAO extends ReadWriteDAO<Endereco, Long> {
     @Override
     protected void delete(Connection conn, Long codigo) throws SQLException {
        String sql = "DELETE INTO endereco (logradouro, cidade, cep, numero, complemento, bairro) VALUES (?, ?, ?) RETURNING id";
-        EnderecoDAO enderecoDAO = DAOFactory.getInstance().getEnderecoDAO();
+    //    EnderecoDAO enderecoDAO = DAOFactory.getInstance().getEnderecoDAO();
         try (PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 //            ps.setString(1, bean.getLogradouro());
 //            ps.setString(2, bean.getCidade());

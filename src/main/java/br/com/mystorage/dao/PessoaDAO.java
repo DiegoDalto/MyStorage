@@ -5,134 +5,89 @@
  */
 package br.com.mystorage.dao;
 
+import br.com.mystorage.dao.utils.DAOFactory;
+import br.com.mystorage.dao.utils.ReadWriteDAO;
 import br.com.mystorage.bean.Pessoa;
-import br.com.mystorage.db.ConexaoJDBC;
-import br.com.mystorage.db.ConexaoPostgresJDBC;
+import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Diego
  */
-public class PessoaDAO {
+public class PessoaDAO extends ReadWriteDAO<Pessoa, Long> {
 
-    private final ConexaoJDBC conexao;
-
-    public PessoaDAO() throws SQLException, ClassNotFoundException {
-        this.conexao = new ConexaoPostgresJDBC();
+    public PessoaDAO() {
+        super(Pessoa.class);
     }
 
-    public Long inserirPessoa(Pessoa pessoa) throws SQLException, ClassNotFoundException {
-        Long id = null;
-        String sqlQuery = "INSERT INTO pessoa (nome, login, senha) VALUES (?, ?, ?) RETURNING id";
-
-        try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
-            stmt.setString(1, pessoa.getNome());
-            stmt.setString(2, pessoa.getLogin());
-            stmt.setString(3, pessoa.getSenha());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    id = rs.getLong("id");
+    @Override
+    protected void insert(Connection conn, Pessoa bean, Serializable... dependencies) throws SQLException {
+        String sql = "INSERT INTO pessoa (nome, cpf, login, senha, rg, permissao) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+        EnderecoDAO enderecoDAO = DAOFactory.getInstance().getEnderecoDAO();
+        try (PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, bean.getNome());
+            ps.setString(2, bean.getCpf());
+            ps.setString(3, bean.getLogin());
+            ps.setString(4, bean.getSenha());
+            ps.setString(5, bean.getRg());
+            ps.setString(6, bean.getPermissao().toString());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.first()) {
+                    bean.setID(rs.getLong("id"));
+                    enderecoDAO.insert(conn, bean.getEndereco(), bean.getID());
                 }
             }
-            this.conexao.commit();
+            conn.commit();
         } catch (SQLException ex) {
-            this.conexao.rollback();
+            conn.rollback();
             throw ex;
         }
-        return id;
     }
 
-    public int alterarPessoa(Pessoa pessoa) throws SQLException, ClassNotFoundException {
-        String sqlQuery = "UPDATE pessoa SET nome = ?, login = ?, senha = ? WHERE id = ?";
-        int linhasAfetadas = 0;
-
-        try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
-            stmt.setString(1, pessoa.getNome());
-            stmt.setString(2, pessoa.getLogin());
-            stmt.setString(3, pessoa.getSenha());
-            // stmt.setString(4, pessoa.getPermissao().toString());
-            stmt.setLong(4, pessoa.getID());
-
-            linhasAfetadas = stmt.executeUpdate();
-            this.conexao.commit();
-
-        } catch (SQLException ex) {
-            this.conexao.rollback();
-            throw ex;
-        }
-        return linhasAfetadas;
-    }
-
-    public int excluirPessoa(long id) throws SQLException, ClassNotFoundException {
-        int linhasAfetadas = 0;
-        String sqlQuery = "DELETE FROM pessoa WHERE id = ?";
-
-        try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
-            stmt.setLong(1, id);
-            linhasAfetadas = stmt.executeUpdate();
-            this.conexao.commit();
-        } catch (SQLException ex) {
-            this.conexao.rollback();
-            throw ex;
-        }
-        return linhasAfetadas;
-    }
-
-    public Pessoa selecionarPessoa(long id) throws SQLException, ClassNotFoundException {
-        String sqlQuery = "SELECT * FROM pessoa WHERE id = ?";
-
-        try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
-            stmt.setLong(1, id);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return parser(rs);
+    @Override
+    protected void update(Connection conn, Pessoa bean) throws SQLException {
+        String sql = "UPDATE pessoa SET nome = ?, cpf = ?, login = ?, senha = ?, rg = ? WHERE id = ?";
+        EnderecoDAO enderecoDAO = DAOFactory.getInstance().getEnderecoDAO();
+        try (PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, bean.getNome());
+            ps.setString(2, bean.getCpf());
+            ps.setString(3, bean.getLogin());
+            ps.setString(4, bean.getSenha());
+            ps.setString(5, bean.getRg());
+            ps.executeUpdate();
+            
+            try(ResultSet rs = ps.getGeneratedKeys()){
+                if(rs.first()) {
+                    bean.setID(rs.getLong("id"));
+                    enderecoDAO.update(conn, bean.getEndereco());
+                }
             }
+            conn.commit();
         } catch (SQLException ex) {
-            throw ex;
-        }
-        return null;
-    }
-
-    public List<Pessoa> listarPessoas() throws SQLException, ClassNotFoundException {
-        String sqlQuery = "SELECT * FROM pessoa ORDER BY id";
-
-        try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
-            ResultSet rs = stmt.executeQuery();
-
-            List<Pessoa> pessoas = new ArrayList<>();
-
-            while (rs.next()) {
-                pessoas.add(parser(rs));
-            }
-            return pessoas;
-        } catch (SQLException ex) {
+            conn.rollback();
             throw ex;
         }
     }
 
-    private Pessoa parser(ResultSet resultset) throws SQLException {
-        Pessoa p = new Pessoa();
-
-        p.setID(resultset.getLong("id"));
-        p.setNome(resultset.getString("nome"));
-        p.setLogin(resultset.getString("login"));
-        p.setSenha(resultset.getString("senha"));
-        //  p.setPermissao(Permissao.valueOf(resultset.getString("permissao")));
-
-        return p;
+    @Override
+        protected void delete(Connection conn, Long codigo) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+        protected Pessoa get(Connection conn, Long codigo) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+        protected List<Pessoa> getAll(Connection conn) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

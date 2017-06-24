@@ -6,7 +6,7 @@
 package br.com.mystorage.controllers;
 
 import br.com.mystorage.bean.Pessoa;
-import br.com.mystorage.dao.PessoaDAO;
+import br.com.mystorage.dao.pessoaExemploJDBC;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +36,7 @@ public class PessoaController {
     //localhost8080/mystorage/rest/pessoas/
     public List<Pessoa> listAllPessoas() {
         try {
-            PessoaDAO pessoaDAO = new PessoaDAO();
+            pessoaExemploJDBC pessoaDAO = new pessoaExemploJDBC();
             return pessoaDAO.listarPessoas();
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(PessoaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,7 +50,7 @@ public class PessoaController {
     //localhost:8080/mystorage/rest/pessoas/1/
     public Pessoa getPessoa(@PathParam("id") long id) {
         try{
-            PessoaDAO pessoaDAO = new PessoaDAO();
+            pessoaExemploJDBC pessoaDAO = new pessoaExemploJDBC();
             return pessoaDAO.selecionarPessoa(id);
         } catch (SQLException | ClassNotFoundException ex){
             Logger.getLogger(PessoaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,7 +64,7 @@ public class PessoaController {
     @Path("/")
     public Response createPessoa(Pessoa pessoa) {
         try {
-            PessoaDAO pessoaDAO = new PessoaDAO();
+            pessoaExemploJDBC pessoaDAO = new pessoaExemploJDBC();
             pessoaDAO.inserirPessoa(pessoa);
             return Response.status(Response.Status.OK).build();
         } catch (SQLException | ClassNotFoundException ex) {
@@ -79,7 +79,7 @@ public class PessoaController {
     @Path("/")
     public Response updatePessoa(Pessoa pessoa) {
         try{
-            PessoaDAO pessoaDAO = new PessoaDAO();
+            pessoaExemploJDBC pessoaDAO = new pessoaExemploJDBC();
             pessoaDAO.alterarPessoa(pessoa);
             return Response.status(Response.Status.OK).build();
         }catch(SQLException | ClassNotFoundException ex){
@@ -93,7 +93,7 @@ public class PessoaController {
     @Path("{id}/")
     public Response deletePessoa(@PathParam("id") long id) {
         try{
-            PessoaDAO pessoaDAO = new PessoaDAO();
+            pessoaExemploJDBC pessoaDAO = new pessoaExemploJDBC();
             pessoaDAO.excluirPessoa(id);
             return Response.status(Response.Status.OK).build();
         }catch(SQLException | ClassNotFoundException ex){
@@ -108,7 +108,7 @@ public class PessoaController {
     @Path("{id}/")
     public Response concluir(@PathParam("id") long id) {
         try {
-            PessoaDAO pessoaDAO = new PessoaDAO();
+            pessoaExemploJDBC pessoaDAO = new pessoaExemploJDBC();
 
             Pessoa p = pessoaDAO.selecionarPessoa(id);
             p.setNome("TROCANDO INFORMAÇÃO");

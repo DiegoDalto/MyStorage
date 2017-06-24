@@ -16,19 +16,11 @@ import java.util.Objects;
  */
 public class Reserva extends Bean<Long> {
 
-    private Long id;
     private Date data;
     private Status status;
     private Boolean efetivada;
     private List<Item> listItem;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Date getData() {
         return data;
@@ -63,32 +55,7 @@ public class Reserva extends Bean<Long> {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Reserva other = (Reserva) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "Reserva{" + "id=" + id + ", data=" + data + ", status=" + status + ", efetivada=" + efetivada + ", listItem=" + listItem + '}';
+        return "Reserva{" +", data=" + data + ", status=" + status + ", efetivada=" + efetivada + ", listItem=" + listItem + '}';
     }
 }
